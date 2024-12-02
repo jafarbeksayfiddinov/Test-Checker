@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">easyocr</span>
+<span class="s0">import </span><span class="s1">cv2</span>
+<span class="s0">from </span><span class="s1">matplotlib </span><span class="s0">import </span><span class="s1">pyplot </span><span class="s0">as </span><span class="s1">plt</span>
+<span class="s0">import </span><span class="s1">numpy </span><span class="s0">as </span><span class="s1">np</span>
+
+<span class="s1">IMAGE_PATH</span><span class="s2">=</span><span class="s3">'p3.jpg'</span>
+<span class="s1">reader </span><span class="s2">= </span><span class="s1">easyocr</span><span class="s2">.</span><span class="s1">Reader</span><span class="s2">([</span><span class="s3">'en'</span><span class="s2">],</span><span class="s1">gpu</span><span class="s2">=</span><span class="s0">False</span><span class="s2">)</span>
+<span class="s1">result </span><span class="s2">= </span><span class="s1">reader</span><span class="s2">.</span><span class="s1">readtext</span><span class="s2">(</span><span class="s1">IMAGE_PATH</span><span class="s2">)</span>
+<span class="s0">for </span><span class="s1">i </span><span class="s0">in </span><span class="s1">result</span><span class="s2">:</span>
+    <span class="s1">print</span><span class="s2">(</span><span class="s1">i</span><span class="s2">[</span><span class="s4">1</span><span class="s2">])</span>
+<span class="s1">top_left</span><span class="s2">=</span><span class="s1">tuple</span><span class="s2">(</span><span class="s1">result</span><span class="s2">[</span><span class="s4">0</span><span class="s2">][</span><span class="s4">0</span><span class="s2">][</span><span class="s4">0</span><span class="s2">])</span>
+<span class="s1">bottom_right</span><span class="s2">=</span><span class="s1">tuple</span><span class="s2">(</span><span class="s1">result</span><span class="s2">[</span><span class="s4">0</span><span class="s2">][</span><span class="s4">0</span><span class="s2">][</span><span class="s4">2</span><span class="s2">])</span>
+<span class="s1">text</span><span class="s2">=</span><span class="s1">result</span><span class="s2">[</span><span class="s4">0</span><span class="s2">][</span><span class="s4">1</span><span class="s2">]</span>
+<span class="s1">font</span><span class="s2">=</span><span class="s1">cv2</span><span class="s2">.</span><span class="s1">FONT_HERSHEY_SIMPLEX</span>
+
+<span class="s1">img</span><span class="s2">=</span><span class="s1">cv2</span><span class="s2">.</span><span class="s1">imread</span><span class="s2">(</span><span class="s1">IMAGE_PATH</span><span class="s2">)</span>
+<span class="s1">img</span><span class="s2">=</span><span class="s1">cv2</span><span class="s2">.</span><span class="s1">rectangle</span><span class="s2">(</span><span class="s1">img</span><span class="s2">,</span><span class="s1">top_left</span><span class="s2">,</span><span class="s1">bottom_right</span><span class="s2">,(</span><span class="s4">0</span><span class="s2">,</span><span class="s4">255</span><span class="s2">,</span><span class="s4">0</span><span class="s2">),</span><span class="s4">5</span><span class="s2">)</span>
+<span class="s1">img</span><span class="s2">=</span><span class="s1">cv2</span><span class="s2">.</span><span class="s1">putText</span><span class="s2">(</span><span class="s1">img</span><span class="s2">,</span><span class="s1">text</span><span class="s2">,</span><span class="s1">top_left</span><span class="s2">,</span><span class="s1">font</span><span class="s2">,</span><span class="s4">.5</span><span class="s2">,(</span><span class="s4">255</span><span class="s2">,</span><span class="s4">255</span><span class="s2">,</span><span class="s4">255</span><span class="s2">),</span><span class="s1">cv2</span><span class="s2">.</span><span class="s1">LINE_AA</span><span class="s2">)</span>
+<span class="s1">plt</span><span class="s2">.</span><span class="s1">imshow</span><span class="s2">(</span><span class="s1">img</span><span class="s2">)</span>
+<span class="s1">plt</span><span class="s2">.</span><span class="s1">show</span><span class="s2">()</span></pre>
+</body>
+</html>
