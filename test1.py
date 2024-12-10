@@ -1,34 +1,52 @@
-from PIL import Image, ImageEnhance, ImageOps
-import pytesseract
 
-# Path to Tesseract
-pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/bin/tesseract'  # Update for your setup
+from cryptography.fernet import Fernet
+import qrcode
+import cv2
 
-# Load the image
-image_path = 'data sample.png'  # Replace with your image path
-image = Image.open(image_path)
+fixed_key = b"3QD_AaN0Z4m_AU1qPUgSmv9fUwr2V-g-8hLx0NV3o1w="  # Replace with your fixed key
+cipher = Fernet(fixed_key)
 
-# Step 1: Crop the bottom table area (adjust crop values if needed)
-width, height = image.size
-table_area = image.crop((0, int(height * 0.8), width, height))  # Bottom 20% of the image
-table_area.save('debug_cropped_table.png')  # Save cropped image for debugging
+#
+# def generate_qr_code(message, qr_path="secret_message.png"):
+#     encrypted_message = cipher.encrypt(message.encode())
+#     print(f"Encrypted Message: {encrypted_message.decode()}")
+#
+#     qr = qrcode.QRCode(
+#         version=1,
+#         error_correction=qrcode.constants.ERROR_CORRECT_L,
+#         box_size=10,
+#         border=4,
+#     )
+#     qr.add_data(encrypted_message.decode())
+#     qr.make(fit=True)
+#
+#     img = qr.make_image(fill_color="black", back_color="white")
+#     img.save(qr_path)
+#     print(f"QR code saved as {qr_path}")
+#
 
-# Step 2: Preprocess the image
-gray_image = ImageOps.grayscale(table_area)  # Convert to grayscale
-threshold_image = gray_image.point(lambda x: 0 if x < 140 else 255, '1')  # Apply binary threshold
-threshold_image.save('debug_processed_table.png')  # Save processed image for debugging
+def decode_qr_code(qr_path="revised_photo.png"):
+    image = cv2.imread(qr_path)
+    detector = cv2.QRCodeDetector()
 
-# Step 3: Extract text using OCR
-custom_config = r'--psm 6'  # Assume uniform block of text
-table_text = pytesseract.image_to_string(threshold_image, config=custom_config)
+    decrypted_data, points, _ = detector.detectAndDecode(image)
+    print(points[0])
+    for i in points[0]:
+        print((int)(i[0]),(int)(i[1]))
+    # print(points)
+    if not decrypted_data:
+        print("No QR code found in the image.")
+        return
 
-# Step 4: Debug and process extracted text
-print("Raw OCR Output:")
-print(table_text)  # Print the raw output to debug
-lines = table_text.split('\n')
-table_values = [line.strip() for line in lines if line.strip()]  # Remove empty lines
+    print(f"Encrypted Message from QR Code: {decrypted_data}")
 
-# Step 5: Output the results
-print("Extracted Table Values:")
-for line in table_values:
-    print(line)
+    decrypted_message = cipher.decrypt(decrypted_data.encode())
+    print(f"Decrypted Message: {decrypted_message.decode()}")
+
+
+if __name__ == "__main__":
+    # Encrypt and generate QR code
+    # generate_qr_code("1.A 2.B 3.C")
+
+    # Decode the QR code and decrypt the message
+    decode_qr_code()
